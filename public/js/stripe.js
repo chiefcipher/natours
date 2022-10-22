@@ -12,10 +12,9 @@ export const bookTour = async (tourId) => {
     // 1. get checkout session from api
     // axios like this automatically does get request
     const session = await axios(
-      `http://127.0.0.1:3000/api/v1/bookings/checkout-session/${tourId}`
+      `/api/v1/bookings/checkout-session/${tourId}`
     );
     // 2. create checout form + charge credit card
-    console.log(session);
     await stripe.redirectToCheckout({
       sessionId : session.data.session.id
     })
