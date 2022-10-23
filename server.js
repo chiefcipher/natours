@@ -16,14 +16,11 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
-//LOCAL DB
-// mongoose.connect(process.env.DATABASE_LOCAL).then(() => console.log('SUCCESS, LOCAL DB'))
-
 //ONLINE DB
 mongoose.connect(DB).then(() => console.log('DB CONNECTION SUCCESSFUL'));
 // .catch(() => console.log('DATABASE CONNECTION ERROR'));
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT|| 3000;
 const server = app.listen(port, '127.0.0.1', () => {
   console.log(`App running on port ${port}`);
 });
