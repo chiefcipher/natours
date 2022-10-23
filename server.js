@@ -33,7 +33,18 @@ process.on("unhandledRejection", (err) => {
   console.log("UNHANDLED REJECTION, shutting down...");
   server.close(() => {
     process.exit(1);
+
   });
 });
 
+
+// SIGTERM EVENT FROM HEROKU DYNO SHUTTING DOWN 
+// heroku sends this event every 24hrs to shut down our system
+process.on('SIGTERM' , () => {
+  console.log('SIGTERM RECIEVED, shtting down gracefully');
+  // this server.close ensures all running requests are completed 
+  server.close(() => {
+    'server closed'
+  });
+})
 // console.log(x);

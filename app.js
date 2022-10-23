@@ -26,6 +26,9 @@ const limitter = rateLimit({
   window: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour",
 });
+
+// THIS ALLOWS req.sequre and x forwarded proto headers work for heroku check 
+app.enable('trust proxy')
 ///template engine
 app.set("view engine", "pug");
 // app.set('views', './views'); dont do this
@@ -71,6 +74,7 @@ app.use(
   })
 );
 
+// test by going to https://www.giftofspeed.com/gzip-test/
 //compresses our api text(json included) responses
 app.use(compression());
 app.set("views", path.join(__dirname, "views")); //do this
