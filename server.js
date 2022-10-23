@@ -17,7 +17,11 @@ const DB = process.env.DATABASE.replace(
 );
 
 //ONLINE DB
-mongoose.connect(DB).then(() => console.log('DB CONNECTION SUCCESSFUL'));
+mongoose.connect(DB).then(() => console.log('DB CONNECTION SUCCESSFUL'),{
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false
+});
 // .catch(() => console.log('DATABASE CONNECTION ERROR'));
 
 const port = process.env.PORT|| 3000;
