@@ -20,15 +20,27 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cookieParser = require("cookie-parser");
-
+const cors = require("cors");
 const limitter = rateLimit({
   max: 100,
   window: 60 * 60 * 1000,
   message: "Too many requests from this IP, please try again in an hour",
 });
 
-// THIS ALLOWS req.sequre and x forwarded proto headers work for heroku check 
-app.enable('trust proxy')
+// THIS ALLOWS req.sequre and x forwarded proto headers work for heroku check
+app.enable("trust proxy");
+
+// this a..use() works for a only simple requests(get & post i.e requets without preflight phase)
+// allows for cross origin resource sharing from diff port/subdomain/host
+app.use(cors());
+// app.options listens to options preflight requests for complex requests (eg delete put patch)
+app.options('*' , cors())
+// app.use('/api/v1/tours', cors()) you can also do this 
+// api.natours.com and natours.com(frontend)
+// we can use the below to allow only the frontend part to make cors 
+// app.use(cors({
+//   origin : 'https://www.natours.com'
+// }))
 ///template engine
 app.set("view engine", "pug");
 // app.set('views', './views'); dont do this
@@ -38,22 +50,8 @@ app.use(express.static(path.join(__dirname, "public")));
 // GLOBAL MIDDLEWARES
 // set security http headers
 // app.use(helmet());
+app.use(helmet());
 
-app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: {
-      allowOrigins: ["*"],
-    },
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["*"],
-        scriptSrc: ["'self'"],
-        // scriptSrc: ["* data: 'unsafe-eval' 'unsafe-inline' blob:"],
-      },
-    },
-  })
-);
 // development logging
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
