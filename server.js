@@ -47,4 +47,5 @@ process.on('SIGTERM' , () => {
     'server closed'
   });
 })
+// use heroku ps command to view all dynos
 // console.log(x);
