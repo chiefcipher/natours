@@ -10,6 +10,8 @@ const userRouter = require("./routes/userRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
 const viewRouter = require("./routes/viewRoutes");
 const bookingRouter = require("./routes/bookingRoutes");
+// controllers
+const bookingController = require("./controllers/bookingController");
 
 // error handler
 const AppError = require("./utils/appError");
@@ -34,10 +36,10 @@ app.enable("trust proxy");
 // allows for cross origin resource sharing from diff port/subdomain/host
 app.use(cors());
 // app.options listens to options preflight requests for complex requests (eg delete put patch)
-app.options('*' , cors())
-// app.use('/api/v1/tours', cors()) you can also do this 
+app.options("*", cors());
+// app.use('/api/v1/tours', cors()) you can also do this
 // api.natours.com and natours.com(frontend)
-// we can use the below to allow only the frontend part to make cors 
+// we can use the below to allow only the frontend part to make cors
 // app.use(cors({
 //   origin : 'https://www.natours.com'
 // }))
@@ -56,6 +58,16 @@ app.use(helmet());
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+// call this route before calling body parser
+// cz body parser changes the body to json which we dont want
+app.post(
+  "/webhook",
+  express.raw({
+    type: "application/json",
+  }),
+  bookingController.webhookCheckout
+);
+
 // body parser, reading data from the body into req.body
 app.use(
   express.json({
@@ -109,6 +121,7 @@ app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/bookings", bookingRouter);
+
 app.all("*", (req, res, next) => {
   // FIRST
   // res.status(404).json({
