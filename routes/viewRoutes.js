@@ -12,6 +12,9 @@ const bookingController = require("../controllers/bookingController");
 //   });
 // });
 
+// middle ware that runs and add res.locals 
+// res.locals is available in out templetes 
+router.use(viewsController.alerts)
 router.get(
   "/",
   authController.isLoggedIn,

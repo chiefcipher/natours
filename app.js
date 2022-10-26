@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === "development") {
 // call this route before calling body parser
 // cz body parser changes the body to json which we dont want
 app.post(
-  "/webhook",
+  "/webhook-checkout",
   express.raw({
     type: "application/json",
   }),

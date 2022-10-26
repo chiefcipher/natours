@@ -20,7 +20,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     // success_url: `${req.protocol}://${req.get('host')}?tour=${
     //   req.params.tourId
     // }&user=${req.user.id}&price=${tour.price}`,
-    success_url: `${req.protocol}://${req.get("host")}/my-tours`,
+    success_url: `${req.protocol}://${req.get("host")}/my-tours?alert=booking`,
     cancel_url: `${req.protocol}://${req.get("host")}/tour/${tour.slug}`, //go back to current tour on cancel
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
@@ -37,7 +37,11 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
             name: `${tour.name} Tour`,
             description: tour.summary,
             // images here must be hosted but it works on the server as it is locally thats why we can do tour.imageCOver
-            images: [`${req.protocol}://${reg.get('host')}/img/tours/${tour.imageCover}`],
+            images: [
+              `${req.protocol}://${reg.get("host")}/img/tours/${
+                tour.imageCover
+              }`,
+            ],
           },
         },
       },
