@@ -37,7 +37,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
             name: `${tour.name} Tour`,
             description: tour.summary,
             // images here must be hosted but it works on the server as it is locally thats why we can do tour.imageCOver
-            images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
+            images: [`${req.protocol}://${reg.get('host')}/img/tours/${tour.imageCover}`],
           },
         },
       },
@@ -73,7 +73,7 @@ const createBookingCheckout = async (sessionData) => {
     })
   ).id;
   // find and convert price to usd from cent
-  const price = sessionData.line_items[0].price_data.unit_amount / 100;
+  const price = sessionData.display_items[0].price_data.unit_amount / 100;
   await Booking.create({
     tour,
     user,
@@ -96,7 +96,7 @@ exports.webhookCheckout = (req, res, next) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
   // testing if event type matches that on our dashboard
-  if (event.type === "checkout.session.complete") {
+  if (event.type === "checkout.session.completed") {
     // event.data.object is same as session created earlier
     createBookingCheckout(event.data.object);
     res.status(200).json({
